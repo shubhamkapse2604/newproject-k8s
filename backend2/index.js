@@ -22,11 +22,19 @@ db.connect((err) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Backend is alive!");
+  res.send("🛒 Mini Flipkart API is running!");
 });
 
-app.get("/books", (req, res) => {
-  db.query("SELECT * FROM books", (err, result) => {
+app.get("/products", (req, res) => {
+  db.query("SELECT * FROM products", (err, result) => {
+    if (err) return res.status(500).send(err);
+    res.json(result);
+  });
+});
+
+app.get("/search", (req, res) => {
+  const q = req.query.q || "";
+  db.query("SELECT * FROM products WHERE title LIKE ?", [`%${q}%`], (err, result) => {
     if (err) return res.status(500).send(err);
     res.json(result);
   });
